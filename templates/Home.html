@@ -1,0 +1,175 @@
+
+
+{%extends "base.html"%}
+{% load home_page_tags %}
+    
+{%block content%}
+
+<title> EZFile </title>
+
+{% if message %}
+    <div style="position: relative; min-height: 300px;">
+        <div style="position: absolute; top: 0; right: 0; min-width: 300px;">
+            <div class="toast" data-autohide="false">
+                <div class="toast-header">
+                    <strong class="mr-auto text-primary">EZFile</strong>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+                </div>
+            <div class="toast-body">
+                {{ message }}
+            </div>
+        </div>
+    </div>
+    
+{% endif %}
+
+<div class="container">
+    <div class="view-account">
+        <section class="module">
+            <div class="module-inner">
+                
+
+                <div class="content-panel">
+                    <div class="content-header-wrapper">
+                        <h2 class="title">My Drive</h2>
+                        <div class="actions">
+                        <form method="post" autocomplete="off" action="{% url 'make_directory' dir%}">{%csrf_token%} 
+                          <input name="directory" autocomplete="off" class="col-xs-3" placeholder="New Folder" required pattern="([A-z0-9À-ž\s]){2,}">
+                          <button class="btn btn-success" type="submit">Create New Folder</button>
+                        </form> 
+                        <form method="get" action = "{% url 'upload_page' dir%}"> 
+                            <button class="btn btn-success" type="submit"><i class="fa fa-plus"></i> Upload Files</button>
+                        </form>
+                        </div>
+                        
+                        <nav aria-label="breadcrumb">
+                          <ol class="breadcrumb">
+                            {% for breadcrumb in breadcrumb_list %}
+                                {% if forloop.last %}
+                                <li class="breadcrumb-item active"><a href="#">{{ breadcrumb.breadcrumb_name }}</a></li>
+                                {%else%}
+                                <li class="breadcrumb-item"><a href="{% url 'home_page' breadcrumb.breadcrumb_name_for_url%}">{{ breadcrumb.breadcrumb_name }}</a></li>
+                                {%endif%}
+                            {% endfor %}
+                          </ol>
+                        </nav>
+                    </div>
+                    <div class="content-utilities">
+                        
+                        <div class="actions">
+                            
+                            
+                            
+                        </div>
+                    </div>
+
+                    <div class="drive-wrapper drive-grid-view">
+                    <div class="grid-items-wrapper">
+                    {%if not files and not folders%}
+                    
+                            <div class="drive-item module text-center">
+                                <div class="drive-item-inner module-inner">
+                                    <div class="drive-item-title"><a href="#">No files or folders found here</a></div>
+                                    <div class="drive-item-thumb">
+                                        <a href="#"><i class="fa fa-file-text-o text-primary"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                    {%endif%}
+                            
+                    {% if folders %}
+                        
+                            
+                                {%for f in folders%}
+                                    <div class="drive-item module text-center">
+                                        <div class="drive-item-inner module-inner">
+                                            <div class="drive-item-title"><a href="#">{{f.dir_name}}</a></div>
+                                            <div class="drive-item-thumb">
+                                            <a href="{%url 'home_page' f.dir_name_for_url%}"><i class="fa fa-folder text-primary"></i></a>
+                                            </div>
+                                        </div>
+                                        <div class="drive-item-footer module-footer">
+                                        <ul class="utilities list-inline">
+                                            <li><a href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="fa fa-trash"></i></a></li>
+                                        </ul>
+                                        </div>
+                                    </div>
+                                
+                                {% endfor %}        
+                        
+                              
+                    {% endif %}
+
+                            
+
+
+                    {% if files %}
+                    
+                    
+                                {%for f in files%}
+                                {% ends_with_jpg f.get_file_name as e_w_jpg%}
+                                {% ends_with_pdf f.get_file_name as e_w_pdf%}
+                                {% ends_with_ppt f.get_file_name as e_w_ppt%}
+                                {% ends_with_csv f.get_file_name as e_w_csv%}
+                                {% ends_with_doc f.get_file_name as e_w_doc%}
+                                        <div class="drive-item module text-center">
+                                            <div class="drive-item-inner module-inner">
+                                                <div class="drive-item-title"><a href="{% url 'download_file' filename=f.filename.url %}">{{f.get_file_name}}</a>
+                                                </div>
+                                                <div class="drive-item-thumb">
+                                                    {%if e_w_jpg%}
+                                                    <a href="#"><i class="fa fa-file-image-o text-primary"></i></a>
+                                                    {%elif e_w_pdf%}
+                                                    <a href="#"><i class="fa fa-file-pdf-o text-warning"></i></a>
+                                                    {%elif e_w_ppt%}
+                                                    <a href="#"><i class="fa fa-file-powerpoint-o text-warning"></i></a>
+                                                    {%elif e_w_csv%}
+                                                    <a href="#"><i class="fa fa-file-excel-o text-success" ></i></a>
+                                                    {%elif e_w_doc%}
+                                                    <a href="#"><i class="fa fa-file-word-o text-info"></i></a>                                                                                                                                                        
+                                                    {%else%}
+                                                    <a href="#"><i class="fa fa-file-text-o text-primary"></i></a>                               
+                                                    {%endif%}
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="drive-item-footer module-footer">
+                                                <ul class="utilities list-inline">
+                                                    <li><a href="{% url 'download_file' filename=f.filename.url %}" target="_blank" data-toggle="tooltip" data-placement="top" title="" data-original-title="Download"><i class="fa fa-download"></i></a></li>
+                                                    <li><a href="{% url 'delete_file' f.filename.url %}" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="fa fa-trash"></i></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                {% endfor %}                            
+                    {% endif %}
+                    
+                    </div>
+                    </div>
+
+
+                            
+
+                    
+                </div>
+            </div>
+        </section>
+    </div>
+
+    
+</div>
+
+
+
+
+
+<script>
+$(document).ready(function(){
+  $('.toast').toast('show');
+});
+</script>   
+
+{%endblock%}  
+    
+
+    
+</html>

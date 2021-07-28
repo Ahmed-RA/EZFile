@@ -1,0 +1,35 @@
+<!DOCTYPE=html>
+<html>
+{% load static %}
+{% load socialaccount %}
+<title>Welcome</title>
+<head>
+    
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="{% static 'css/login-form-dark.css' %}">
+</head>
+<body>
+    <div class="login-dark">
+        <form method="post" action = "{% url 'authenticate_user'%}">{% csrf_token %}
+            <h2 class="sr-only">Welcome to EZFile</h2>
+            <div class="illustration"><i class="icon ion-ios-locked-outline"></i></div>
+            <div class="form-group"><input class="form-control" name="username" placeholder="Username"></div>
+            <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password"></div>
+            <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Log In</button></div>
+            <div class="form-group"><a href="{% provider_login_url 'google' %}" class="btn btn-primary btn-block" role="button">Log In with Google</a></div>
+            {% if message %}
+            <a class="forgot">{{ message }}</a>
+            {% endif %}
+            <a href="{% url 'signup'%}" class="forgot">No account? Sign up here!</a>
+            <a href="{% url 'changelog_view'%}" class="forgot">Changelogs</a>
+            </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"</script>
+</body>
+
+</html>
