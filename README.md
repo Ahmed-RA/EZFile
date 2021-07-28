@@ -22,8 +22,8 @@ How to run:
 `python manage.py migrate` 
 These two commands should connect to the DB and create the respective tables automatically
 
-4. Go to this guide (https://whizzoe.medium.com/in-5-mins-set-up-google-login-to-sign-up-users-on-django-e71d5c38f5d5) and follow from step 7
-make sure in the "/admin" website you have in your "Sites" an entry with "127.0.0.1:8000" as id=2, 
+4. Go to this guide (https://whizzoe.medium.com/in-5-mins-set-up-google-login-to-sign-up-users-on-django-e71d5c38f5d5) and follow from step 7.
+Make sure in the "/admin" website you have in your "Sites" an entry with "127.0.0.1:8000" as id=2, 
 otherwise change the SITE_ID variable in settings.py so that it is the same as in the django
 admin webiste.
 
