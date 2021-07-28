@@ -25,8 +25,7 @@ These two commands should connect to the DB and create the respective tables aut
 
 4. Go to this guide (https://whizzoe.medium.com/in-5-mins-set-up-google-login-to-sign-up-users-on-django-e71d5c38f5d5) and follow from step 7.
 Make sure in the DB you have in your "django_site" an entry with domain "127.0.0.1:8000" and id "2", 
-otherwise change the SITE_ID variable in settings.py so that it is the same as in the django
-admin webiste.
+otherwise change the SITE_ID variable in settings.py so that it is the same as in the DB.
 
 5. If not already running, run in project root: 
 `python manage.py runserver`
