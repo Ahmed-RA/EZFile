@@ -32,3 +32,6 @@ admin webiste.
 `python manage.py runserver`
 
 6. Server should be running and serving the web app at : 127.0.0.1:8000
+
+Note: there is a bug where if you try to login with an admin account into the web app (not the /admin site) there will be an error screen.
+Create a new user either by logging in with Google or by signing up.
