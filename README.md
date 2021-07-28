@@ -19,6 +19,7 @@ Prerequisite: Python 3.9.2 or higher installed (tested only on 3.9.2 as of 28.07
 
 3. Run in project root:
 `python manage.py makemigrations` 
+then:
 `python manage.py migrate` 
 These two commands should connect to the DB and create the respective tables automatically
 
