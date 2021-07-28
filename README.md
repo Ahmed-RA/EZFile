@@ -28,7 +28,7 @@ Make sure in the DB you have in your "django_site" an entry with domain "127.0.0
 otherwise change the SITE_ID variable in settings.py so that it is the same as in the django
 admin webiste.
 
-5. Run in project root: 
+5. If not already running, run in project root: 
 `python manage.py runserver`
 
 6. Server should be running and serving the web app at : 127.0.0.1:8000
