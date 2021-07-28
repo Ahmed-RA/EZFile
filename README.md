@@ -6,7 +6,7 @@ This project was created as part of the GSD course "Software Development Project
 Developed by: Ahmed Abdullah (email: ahmed.abdullah@informatik.hs-fulda.de)
 Prerequisite: Python 3.9.2 or higher installed (tested only on 3.9.2 as of 28.07.2021)
 
-How to run:
+# How to run:
 
 1. Install django and django all-auth with the following two commands:
 `pip install django` 
