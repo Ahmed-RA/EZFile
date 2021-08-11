@@ -15,7 +15,7 @@ def changelog_view(request):
 
 def login(request):
     user = request.user
-    if user.is_authenticated:
+    if user.is_authenticated and (not user.is_staff):
         dir = "Home" #set directory to home
         renderback = views.home_page(request, dir) #render the app home page template with current directory set to home
         return renderback #return generated template
@@ -25,7 +25,7 @@ def login(request):
 
 def signup(request):
     user = request.user
-    if user.is_authenticated:
+    if user.is_authenticated and (not user.is_staff):
         dir = "Home"
         renderback = views.home_page(request, dir)
         return renderback
