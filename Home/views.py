@@ -129,14 +129,13 @@ def make_directory(request, dir):
 
 #retrives a url to download a specific file
 def download_file(request, filename):
-    #using any result to get the absolute path of the media 
-    #for formating reasons. Could not get MEDIA_ROOT to work with open(path)
+    #using user extra info query to get the absolute path of the media folder
     user = request.user
     user_extrainfo = User_extrainfo.objects.get(pk=user.id)
     user_absolute_path = user_extrainfo.u_rdir
+    user_absolute_path = user_absolute_path.replace("\\",r'/') 
     user_absolute_path = user_absolute_path.split('/')
-    user_absolute_path[0] = user_absolute_path[0].replace("\\",r"/")
-    path = user_absolute_path[0] + filename.replace("/media","")
+    path = '/'.join(user_absolute_path[0:-1]) + filename.replace("/media","")    
     file_to_be_downloaded = open(path, 'rb')
     mime_type, _ = mimetypes.guess_type(path)
     response = HttpResponse(file_to_be_downloaded, content_type=mime_type)
@@ -146,15 +145,14 @@ def download_file(request, filename):
 #deletes a specific file
 @login_required
 def delete_file(request, filename):
-    #using result to get the absolute path of the media 
-    #for formating reasons. Could not get MEDIA_ROOT to work with open(path)
+    #using user extra info query to get the absolute path of the media folder
     user = request.user
     user_extrainfo = User_extrainfo.objects.get(pk=user.id)
     user_absolute_path = user_extrainfo.u_rdir
+    user_absolute_path = user_absolute_path.replace("\\",r'/') 
     user_absolute_path = user_absolute_path.split('/')
-    user_absolute_path[0] = user_absolute_path[0].replace("\\",r"/")
-    path = user_absolute_path[0] + filename.replace("/media","")
-    filename_in_DB = path.replace(user_absolute_path[0]+'/',"")
+    path = '/'.join(user_absolute_path[0:-1]) + filename.replace("/media","")  
+    filename_in_DB = path.replace('/'.join(user_absolute_path[0:-1]) + '/',"")
     try: 
         os.remove(path)
         file_to_be_deleted = UsrFavfiles.objects.filter(filename__in=filename_in_DB)
