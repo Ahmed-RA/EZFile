@@ -16,11 +16,11 @@ def changelog_view(request):
 def login(request):
     user = request.user
     if user.is_authenticated:
-        dir = "Home"
-        renderback = views.home_page(request, dir)
-        return renderback
+        dir = "Home" #set directory to home
+        renderback = views.home_page(request, dir) #render the app home page template with current directory set to home
+        return renderback #return generated template
     else:
-        return render(request, 'login.html', {})
+        return render(request, 'login.html', {}) #return template for the login prompt
 
 
 def signup(request):
@@ -50,7 +50,7 @@ def authenticate_user(request):
     usernm = request.POST['username']
     pw = request.POST['password']
     user = authenticate(request, username=usernm, password=pw)
-    if user is not None:
+    if user is not None and (not user.is_staff):
         dj_login(request, user)
         dir = "Home"
         renderback = views.home_page(request, dir)

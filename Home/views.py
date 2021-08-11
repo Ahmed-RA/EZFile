@@ -131,7 +131,8 @@ def make_directory(request, dir):
 def download_file(request, filename):
     #using any result to get the absolute path of the media 
     #for formating reasons. Could not get MEDIA_ROOT to work with open(path)
-    user_extrainfo = User_extrainfo.objects.filter().first() 
+    user = request.user
+    user_extrainfo = User_extrainfo.objects.get(pk=user.id)
     user_absolute_path = user_extrainfo.u_rdir
     user_absolute_path = user_absolute_path.split('/')
     user_absolute_path[0] = user_absolute_path[0].replace("\\",r"/")
@@ -145,10 +146,10 @@ def download_file(request, filename):
 #deletes a specific file
 @login_required
 def delete_file(request, filename):
-    #using any result to get the absolute path of the media 
+    #using result to get the absolute path of the media 
     #for formating reasons. Could not get MEDIA_ROOT to work with open(path)
     user = request.user
-    user_extrainfo = User_extrainfo.objects.filter().first() 
+    user_extrainfo = User_extrainfo.objects.get(pk=user.id)
     user_absolute_path = user_extrainfo.u_rdir
     user_absolute_path = user_absolute_path.split('/')
     user_absolute_path[0] = user_absolute_path[0].replace("\\",r"/")
