@@ -6,15 +6,22 @@ This project was created as part of the GSD course "Software Development Project
 Developed by: Ahmed Abdullah (email: ahmed.abdullah@informatik.hs-fulda.de)
 Prerequisite: Python 3.9.2 or higher installed (tested only on 3.9.2 as of 28.07.2021)
 
+<<<<<<< HEAD
 Code can be found under the dev branch
 
+=======
+>>>>>>> dev
 # How to run:
 
 1. Install django and django all-auth with the following two commands:
 `pip install django` 
 `pip install django all-auth`
 
+<<<<<<< HEAD
 2. Clone the 'dev' branch, then modify the EZFile/settings.py file as follows:
+=======
+2. Clone this branch, then modify the EZFile/settings.py file as follows:
+>>>>>>> dev
 - Change SECRET_KEY (How to generate one: (https://tech.serhatteker.com/post/2020-01/django-create-secret-key/))
 - Modify DIRS in the TEMPLATES variable to an absolute path to the "templates" folder according to your file system.
 - Modify the DATABASES dictionary to your implemented DB. Make sure to create a schema first.

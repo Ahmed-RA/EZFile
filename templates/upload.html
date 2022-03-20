@@ -1,0 +1,36 @@
+
+    {% extends "base.html" %}
+    
+    {% block upload %}
+
+
+    {% if message %}
+    <div class="row " style="margin-top: 20px">
+    <h2> {{ message }} </h2>
+    </div>
+    {% endif%}
+
+    <div class="row " style="margin-top: 20px">
+			<div class="col-12">
+				<div class="container">
+                <form method="post" action="{% url 'upload_files' dir%}" enctype="multipart/form-data">{% csrf_token %}
+                <div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="file">Uploading in : {{ dir }}:</label>
+								<input class="form-control" id="file" type="file" name="files[]"  multiple>
+							</div>
+						</div>
+                        <button type="submit" name="submit" class="btn btn-primary">
+							<span>Upload Files</span>
+						</button>
+					</form>
+
+				</div>
+			</div>
+    </div>
+
+    {%endblock%}
+    
+
+
+</html>
