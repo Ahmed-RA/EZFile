@@ -14,7 +14,7 @@ Prerequisite: Python 3.9.2 or higher installed (tested only on 3.9.2 as of 28.07
 
 2. Clone this branch, then modify the EZFile/settings.py file as follows:
 
-- Change SECRET_KEY (How to generate one: (https://tech.serhatteker.com/post/2020-01/django-create-secret-key/))
+- Change SECRET_KEY (IMPORTANT) (How to generate one: (https://tech.serhatteker.com/post/2020-01/django-create-secret-key/))
 - Modify DIRS in the TEMPLATES variable to an absolute path to the "templates" folder according to your file system.
 - Modify the DATABASES dictionary to your implemented DB. Make sure to create a schema first.
 
