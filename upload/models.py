@@ -24,13 +24,26 @@ def get_upload_destination(instance, filename):
     # file will be uploaded to MEDIA_ROOT/<id>/<filename>
     return '/'.join([instance.up_ds, filename])
 
+
+class Usr_dirs(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    u_dir = models.CharField(default = "notset",max_length=255)
+
+    def __str__(self):
+        return [self.id, self.u_dir]
+
+    class Meta:
+        unique_together = (('user_id', 'u_dir'),)
+        managed = True
+
+
 class UsrUploads(models.Model):
     user_id_for_UsrUploads = models.ForeignKey(User, on_delete=models.CASCADE)
-    upload_dir = models.CharField(default = "notset",max_length=255)
-
+    upload_dir = models.ForeignKey(Usr_dirs, on_delete=models.CASCADE)
 
     class Meta:
         managed = True
+
 
 class UsrFavfiles(models.Model):
     
@@ -42,17 +55,6 @@ class UsrFavfiles(models.Model):
         return os.path.basename(self.filename.name)
 
     class Meta:
-        managed = True
-
-class Usr_dirs(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    u_dir = models.CharField(default = "notset",max_length=255)
-
-    def __str__(self):
-        return [self.id, self.u_dir]
-
-    class Meta:
-        unique_together = (('user_id', 'u_dir'),)
         managed = True
 
 

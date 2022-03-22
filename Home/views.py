@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from EZFile.settings import MEDIA_ROOT, BASE_DIR
 import mimetypes
 import os
+import shutil
 from pathlib import Path
 
 
@@ -82,12 +83,17 @@ def upload_files(request, dir):
         user = request.user  
         if dir=="Home":
             upload_ds = '' + str(user.id) + '/'
+            upload_ds_without_slash = '' + str(user.id) 
+            upload_dir_id =  Usr_dirs.objects.get(u_dir = upload_ds_without_slash)
+            temp_instance =  UsrUploads(user_id_for_UsrUploads = user, upload_dir= upload_dir_id)
         else:
             dir_split = dir.split('/')
             dir_split[0] = str(user.id)
             current_dir = '/'.join(dir_split)
             upload_ds = '' + current_dir + '/'
-        temp_instance = UsrUploads(user_id_for_UsrUploads = user, upload_dir= upload_ds)       
+            upload_ds_without_slash = '' + current_dir 
+            upload_dir_id =  Usr_dirs.objects.get(u_dir = upload_ds_without_slash)
+            temp_instance =  UsrUploads(user_id_for_UsrUploads = user, upload_dir= upload_dir_id)       
         temp_instance.save()
         for f in listfiles:
             file_instance = UsrFavfiles()
@@ -111,6 +117,10 @@ def make_directory(request, dir):
         new_directory_name = request.POST["directory"]
         if dir=="Home":
             path = os.path.join(MEDIA_ROOT, str(user.id), new_directory_name)
+            if os.path.isdir(path):
+                render_home_page = home_page(request, "Home", "folder already exists")
+                return render_home_page
+                
             os.mkdir(path)
             database_entry = Usr_dirs.objects.create(user_id=user, u_dir = str(user.id) + '/' + new_directory_name)
         else:
@@ -119,7 +129,7 @@ def make_directory(request, dir):
             current_dir = '/'.join(dir_split)
             path = os.path.join(MEDIA_ROOT, current_dir, new_directory_name)
             os.mkdir(path)
-            database_entry = Usr_dirs.objects.create(user_id=user, u_dir = current_dir + new_directory_name)      
+            database_entry = Usr_dirs.objects.create(user_id=user, u_dir = current_dir + '/' + new_directory_name)      
         database_entry.save()
         render_home_page = home_page(request, dir, "new folder created successfully")
         return render_home_page
@@ -153,13 +163,21 @@ def delete_file(request, filename):
     user_absolute_path = user_absolute_path.split('/')
     path = '/'.join(user_absolute_path[0:-1]) + filename.replace("/media","")  
     filename_in_DB = path.replace('/'.join(user_absolute_path[0:-1]) + '/',"")
-    try: 
-        os.remove(path)
-        file_to_be_deleted = UsrFavfiles.objects.filter(filename__in=filename_in_DB)
-        file_to_be_deleted.delete()
-    except Exception:
-        render_home_page = home_page(request, "Home", "error on file deletion")
-        return render_home_page
+    #try: 
+    os.remove(path)
+    file_to_be_deleted = UsrFavfiles.objects.get(filename=filename_in_DB)
+    upload_id_for_file = file_to_be_deleted.upload_id
+    upload_id_for_file_as_int = file_to_be_deleted.upload_id_id
+    file_to_be_deleted.delete()
+    #check if other files are deleted, if no other file exists delete the upload reference
+    other_files = UsrFavfiles.objects.filter(upload_id=upload_id_for_file_as_int)
+    if not other_files.exists():
+        upload = UsrUploads.objects.get(pk=upload_id_for_file_as_int)
+        upload.delete()
+    
+    #except Exception:
+    #render_home_page = home_page(request, "Home", "error on file deletion")
+    #return render_home_page
     filename_in_message = filename.split('/')
     filename_in_message = filename_in_message[-1]
     dir_to_home_page = filename.replace('/media/' + str(user.id), "Home")
@@ -170,6 +188,46 @@ def delete_file(request, filename):
 
         
 
+#deletes a folder and its files
+@login_required
+def delete_folder(request, dir):
+        user = request.user
+        dir_split = dir.split('/')
+        dir_split[0] = str(user.id)
+        current_dir = '/'.join(dir_split)
+        path = os.path.join(MEDIA_ROOT, current_dir)
+        
+        
+        database_entry = Usr_dirs.objects.get(user_id=user, u_dir = current_dir)
+        recursive_delete_DB(user, current_dir)
+        database_entry.delete()  
+
+        
+        #render_home_page = home_page(request, "Home", "error on folder deletion")
+        #return render_home_page    
+
+        shutil.rmtree(path)
+        dir = dir.split('/')        
+        dir_to_return_to = '/'.join(dir[0:-1])
+        render_home_page = home_page(request, dir_to_return_to, "folder deleted successfully")
+        return render_home_page
 
 
+def recursive_delete_DB(user, dir):
+        sub_folders = Usr_dirs.objects.filter(user_id = user, u_dir__contains=dir)
+        print(sub_folders.query)
+        sub_uploads = UsrUploads.objects.filter(user_id_for_UsrUploads=user, upload_dir__in=sub_folders)
+        print(sub_uploads.query)
+        sub_files = UsrFavfiles.objects.filter(upload_id__in=sub_uploads)
+        print(sub_files.query)
 
+        for f in sub_files:
+            f.delete()
+
+        for u in sub_uploads:
+            u.delete()
+
+        for fl in sub_folders:
+            fl.delete()
+
+        

@@ -20,7 +20,10 @@
             <div class="form-group"><input class="form-control" name="username" placeholder="Username" required></div>
             <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password" required></div>
             <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Sign Up</button></div>
-            <a href="{% url 'login'%}" class="forgot">Already a member?</a></form>
+            {% if message %}
+            <a class="forgot">{{ message }}</a>
+            {% endif %}
+            <a href="{% url 'login'%}" class="forgot">Already a member? Click Here</a></form>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"</script>

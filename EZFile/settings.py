@@ -64,7 +64,7 @@ ROOT_URLCONF = 'EZFile.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['absolute path for your templates goes here, it should be the absolute path to the "templates" folder found in EZFile/'],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -86,11 +86,11 @@ WSGI_APPLICATION = 'EZFile.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Name of your schema',
-        'USER': 'username of your DB',
-        'PASSWORD': 'password',
-        'HOST': 'IP Address goes here',
-        'PORT': 'Port goes here',
+        'NAME': 'ezfile',
+        'USER': 'ahmed_ra',
+        'PASSWORD': 'test_password*2',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
     }
 }
 

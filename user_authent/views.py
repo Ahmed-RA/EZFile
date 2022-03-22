@@ -7,6 +7,7 @@ from EZFile.settings import MEDIA_ROOT
 from django.db import IntegrityError
 from Home import views
 from changelog import views as changelog_views
+from upload import models
 import os
 
 def changelog_view(request):
@@ -34,14 +35,26 @@ def signup(request):
 
 def create_user(request):
     try:
-        user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
-        user.save()
-        path2 = os.path.join(MEDIA_ROOT, str(user.id) )
-        os.mkdir(path2)
-        user_extrainfo = User_extrainfo.objects.get(usr_id=user)
-        user_extrainfo.u_rdir = path2
-        user_extrainfo.save()
-        return render(request, 'login.html', {"message":"User created, you may login now"})
+        try: 
+            User.objects.get(email = request.POST['email'])
+            return render(request, 'signup.html', {"message":"Account already exists, try different credentials"})
+        except User.DoesNotExist:
+            try:
+                User.objects.get(username = request.POST['username'])
+                return render(request, 'signup.html', {"message":"Account already exists, try different credentials"})
+            except User.DoesNotExist:
+                user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
+                user.save()
+                path2 = os.path.join(MEDIA_ROOT, str(user.id) )
+                os.mkdir(path2)
+                user_extrainfo = User_extrainfo.objects.get(usr_id=user)
+                user_extrainfo.u_rdir = path2
+                user_extrainfo.save()
+                New_Usr_dir = models.Usr_dirs.objects.create(user_id=user, u_dir = str(user.id))
+                New_Usr_dir.save()
+                return render(request, 'login.html', {"message":"User created, you may login now"})
+        
+            
     except IntegrityError as e:
         return render(request, 'signup.html', {"message":"Something bad happened"})
 
