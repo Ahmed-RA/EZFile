@@ -2,7 +2,6 @@
 
 Simple file management web app.
 
-Developed by: Ahmed Abdullah (email: ahmed.abdullah@informatik.hs-fulda.de)
 
 Prerequisite: 
 - Python 3.9.2 or higher installed (tested only on 3.9.2 as of 28.07.2021)
